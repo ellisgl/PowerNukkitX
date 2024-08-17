@@ -41,16 +41,8 @@ jobs:
     name: Build PNX server
     timeout-minutes: 10
     runs-on: ubuntu-latest
-    needs: [ move-tag, check-files ]
-    if: |#    event is push and there is a change or push or commit the first message +b +u
-      (github.event_name == 'push' || 
-      github.event.pull_request.head.repo.full_name != github.repository) && 
-      (contains(needs.check-files.outputs.changed-files, 'src/') ||
-      contains(needs.check-files.outputs.changed-files, '.github/workflows') || 
-      (github.event_name == 'push' && 
-      (contains(github.event.commits[0].message, '+b') || contains(github.event.commits[0].message, '+u'))
-      ))
-
+    needs: [ check-files ]
+    if: (github.event_name == 'push')
     steps:
       - uses: actions/checkout@v4
         with:
